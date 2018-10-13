@@ -12,10 +12,11 @@ except:
 
 session = requests.Session()
 session.cookies = cookielib.LWPCookieJar(filename = 'cookie.txt')
-username = '20168709'
-mm = b'123abc'
+username = '学号'
+mm = b'密码'
 url='http://jwxt.neuq.edu.cn/jwglxt/xtgl/login_slogin.html'
 
+#定义的header
 header1 = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
             "Accept-Encoding": "gzip, deflate",
@@ -33,6 +34,7 @@ header1 = {
         }
 
 
+#获取csrf_token，该值为表单中必须的
 def get_csrf_token():
     page = session.get(url)
     soup = bs(page.text, "html.parser")
@@ -40,6 +42,8 @@ def get_csrf_token():
     csrftoken = soup.find(id="csrftoken").get("value")
     return csrftoken
 
+
+#从公钥接口获取到构造公钥的模和指数，并在本地生成公钥对明文密码加密。
 def get_passwd():
     publickey = session.get('http://jwxt.neuq.edu.cn/jwglxt/xtgl/login_getPublicKey.html').json()
     b_modulus = base64.b64decode(publickey['modulus'])  # 将base64解码转为bytes
@@ -52,6 +56,8 @@ def get_passwd():
     passwd = base64.b64encode(rsa.encrypt(mm, mm_key))
     return passwd
 
+
+#提交登录表单，并利用cookiejar保存cookie
 def parse():
     payload = {
         'csrftoken': get_csrf_token(),
@@ -64,6 +70,8 @@ def parse():
     # print(cookies)
     print('新的Cookie是'+r.request.headers['Cookie'])
 
+    
+#登录主体函数
 def login():
     try:
         session.cookies.load(ignore_discard = True)
@@ -81,6 +89,8 @@ def login():
         print('未能加载cookie')
         parse()
 
+        
+#通过提交查询信息根据返回的json获取成绩（2018年上学期）
 def get_grade():
     url = 'http://jwxt.neuq.edu.cn/jwglxt/cjcx/cjcx_cxDgXscj.html?doType=query&gnmkdm=N305005'
     data = {
@@ -101,6 +111,8 @@ def get_grade():
     # print('学分是',results['items'][1]['xf'])
     # print(results.text)
 
+    
+#获取课表（2018年上学期的课程）
 def get_class():
     xskb_url = 'http://jwxt.neuq.edu.cn/jwglxt/kbcx/xskbcx_cxXsKb.html?gnmkdm=N253508'
     xskb_data = {
