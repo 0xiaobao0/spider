@@ -19,10 +19,10 @@ def get_post_key():
 
 def login():
     payload = {
-        'pixiv_id': '1920566573@qq.com',
+        'pixiv_id': '账号',
         # 'captcha': '',
         # 'g_recaptcha_response': '',
-        'password': '19970827lbb',
+        'password': '密码',
         'post_key': get_post_key(),
         # 'source': 'pc',
         # 'ref': 'wwwtop_accounts_index',
