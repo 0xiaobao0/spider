@@ -3,9 +3,9 @@ import base64
 import rsa
 from bs4 import BeautifulSoup as bs
 
-yhm='20168709'
+yhm='学号'
 url='http://jwxt.neuq.edu.cn/jwglxt/xtgl/login_slogin.html'
-mm=b'123abc'
+mm=b'密码'
 session = requests.Session()
 
 #获取公钥需要的参数
